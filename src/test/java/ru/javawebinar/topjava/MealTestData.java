@@ -13,6 +13,7 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 public class MealTestData {
 	public static final int USER_ID = START_SEQ;
 	public static final int MEAL_ID = START_SEQ + 2;
+	public static final int NOT_FOUND = START_SEQ - 1;
 
 	public static final Meal meal = new Meal(MEAL_ID, LocalDateTime.of(2020, Month.MARCH, 23, 8, 0) , "Завтрак", 500 );
 	public static final Meal meal1 = new Meal(MEAL_ID+1, LocalDateTime.of(2020, Month.MARCH, 23, 13, 0) , "Обед", 1000 );
@@ -34,5 +35,9 @@ public class MealTestData {
 		updated.setDateTime(LocalDateTime.of(2020, Month.JANUARY, 1, 0, 0));
 		updated.setDescription("updated");
 		return updated;
+	}
+
+	public static Meal getNew(){
+		return new Meal(LocalDateTime.of(2030, Month.JANUARY, 1, 0, 0), "New meal", 2000);
 	}
 }
