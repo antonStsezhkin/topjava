@@ -1,6 +1,9 @@
-DELETE FROM user_roles;
-DELETE FROM meals;
-DELETE FROM users;
+DELETE
+FROM user_roles;
+DELETE
+FROM meals;
+DELETE
+FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 -- Populate users (1 admin, 5 registered users.)
 INSERT INTO users (name, email, password)
@@ -27,8 +30,12 @@ VALUES ('ADMIN', 100000)
 -- Create meals for registered users. Admin does not need food :)
 INSERT INTO meals (description, calories, time, user_id)
 VALUES
+     -- ADMIN
+    ('Завтрак', 500, '2020-03-23 08:00', 100000)
+     , ('Обед', 1000, '2020-03-23 13:00', 100000)
+     , ('Ужин', 500, '2020-03-23 20:00', 100000)
      -- USER
-    ('Завтрак', 500, '2020-03-23 08:00', 100001)
+     , ('Завтрак', 500, '2020-03-23 08:00', 100001)
      , ('Обед', 1000, '2020-03-23 13:00', 100001)
      , ('Ужин', 500, '2020-03-23 20:00', 100001)
 --      -- Vasya
