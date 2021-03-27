@@ -10,29 +10,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
+	static final AtomicInteger counter = new AtomicInteger(START_SEQ);
 
-    private static final AtomicInteger counter = new AtomicInteger(START_SEQ);
+	final Map<Integer, T> map = new ConcurrentHashMap<>();
 
-    final Map<Integer, T> map = new ConcurrentHashMap<>();
+	public T save(T entry) {
+		if (entry.isNew()) {
+			entry.setId(counter.incrementAndGet());
+			map.put(entry.getId(), entry);
+			return entry;
+		}
+		return map.computeIfPresent(entry.getId(), (id, oldT) -> entry);
+	}
 
-    public T save(T entry) {
-        if (entry.isNew()) {
-            entry.setId(counter.incrementAndGet());
-            map.put(entry.getId(), entry);
-            return entry;
-        }
-        return map.computeIfPresent(entry.getId(), (id, oldT) -> entry);
-    }
+	public boolean delete(int id) {
+		return map.remove(id) != null;
+	}
 
-    public boolean delete(int id) {
-        return map.remove(id) != null;
-    }
+	public T get(int id) {
+		return map.get(id);
+	}
 
-    public T get(int id) {
-        return map.get(id);
-    }
+	Collection<T> getCollection() {
+		return map.values();
+	}
 
-    Collection<T> getCollection() {
-        return map.values();
-    }
+	void put(T entity) {
+		map.put(entity.getId(), entity);
+	}
 }
