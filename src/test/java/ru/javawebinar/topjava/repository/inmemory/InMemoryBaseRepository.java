@@ -31,7 +31,7 @@ public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
 		return map.get(id);
 	}
 
-	void putIn(T entity){
+	void put(T entity){
 		map.put(entity.getId(), entity);
 	}
 
