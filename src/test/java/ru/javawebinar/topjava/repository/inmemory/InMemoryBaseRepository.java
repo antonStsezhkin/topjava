@@ -31,11 +31,11 @@ public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
 		return map.get(id);
 	}
 
-	Collection<T> getCollection() {
-		return map.values();
+	void putIn(T entity){
+		map.put(entity.getId(), entity);
 	}
 
-	void put(T entity) {
-		map.put(entity.getId(), entity);
+	Collection<T> getCollection() {
+		return map.values();
 	}
 }
