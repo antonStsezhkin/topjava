@@ -14,8 +14,8 @@ import java.time.LocalTime;
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(name = "meals_unique_user_datetime_idx", columnNames = {"user_id", "date_time"})})
 @NamedQueries({
 		@NamedQuery(name = Meal.ALL_SORTED, query = "SELECT m FROM Meal m WHERE m.user.id =:userId ORDER BY m.dateTime DESC"),
-		@NamedQuery(name = Meal.GET_BETWEEN, query = "SELECT m FROM Meal m WHERE m.user.id =:userId AND m.dateTime >= :startDate AND m.dateTime < :endDate  ORDER BY m.dateTime DESC"),
-		@NamedQuery(name = Meal.DELETE, query = "DELETE m FROM Meal m WHERE m.user.id =:userId AND m.id =:id")
+		@NamedQuery(name = Meal.GET_BETWEEN, query = "SELECT m FROM Meal m WHERE m.user.id =:userId AND m.dateTime >= :start AND m.dateTime < :end  ORDER BY m.dateTime DESC"),
+		@NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.user.id =:userId AND m.id =:id")
 })
 public class Meal extends AbstractBaseEntity {
 	public static final String ALL_SORTED = "Meal.getAll";

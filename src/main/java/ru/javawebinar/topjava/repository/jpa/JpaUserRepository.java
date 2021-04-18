@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -15,6 +16,7 @@ public class JpaUserRepository implements UserRepository {
 	private EntityManager em;
 
 	@Override
+	@Transactional
 	public User save(User user) {
 		if (user.isNew()) {
 			em.persist(user);
@@ -25,6 +27,7 @@ public class JpaUserRepository implements UserRepository {
 	}
 
 	@Override
+	@Transactional
 	public boolean delete(int id) {
 		return em.createNamedQuery(User.DELETE)
 				.setParameter("id", id)

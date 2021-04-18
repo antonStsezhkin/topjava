@@ -23,7 +23,10 @@ public class JpaMealRepository implements MealRepository {
 		if (meal.isNew()) {
 			em.persist(meal);
 			return meal;
-		} else {
+		} else if(get(meal.getId(), userId) == null){
+			return null;
+		}
+		else {
 			return em.merge(meal);
 		}
 	}
@@ -52,10 +55,10 @@ public class JpaMealRepository implements MealRepository {
 
 	@Override
 	public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-		return em.createNamedQuery(Meal.ALL_SORTED, Meal.class)
+		return em.createNamedQuery(Meal.GET_BETWEEN, Meal.class)
+				.setParameter("start", startDateTime)
+				.setParameter("end", endDateTime)
 				.setParameter("userId", userId)
-				.setParameter("startDate", startDateTime)
-				.setParameter("endDate", endDateTime)
 				.getResultList();
 	}
 }
