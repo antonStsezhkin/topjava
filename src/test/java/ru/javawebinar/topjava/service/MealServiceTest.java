@@ -10,10 +10,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -33,9 +35,10 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@ActiveProfiles(resolver = Profiles.ActiveDbProfileResolver.class)
 public class MealServiceTest {
-
 	private static final Logger log = getLogger("result");
+
 	private static final StringBuilder results = new StringBuilder();
 
 	@Rule
@@ -48,7 +51,6 @@ public class MealServiceTest {
 			log.info(result + " ms\n");
 		}
 	};
-
 
 	@Autowired
 	private MealService service;
@@ -63,7 +65,7 @@ public class MealServiceTest {
 	}
 
 	@Test
-	public void delete(){
+	public void delete() {
 		service.delete(MEAL1_ID, USER_ID);
 		assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, USER_ID));
 	}
@@ -142,5 +144,4 @@ public class MealServiceTest {
 	public void getBetweenWithNullDates() {
 		MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
 	}
-
 }
