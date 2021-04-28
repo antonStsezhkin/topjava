@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -22,12 +22,15 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 public class MealServlet extends HttpServlet {
 
-    private ConfigurableApplicationContext springContext;
+    private ClassPathXmlApplicationContext springContext;
     private MealRestController mealController;
 
     @Override
     public void init() {
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        springContext = new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml", "spring/spring-db.xml"}, false);
+//       springContext.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
+        springContext.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.REPOSITORY_IMPLEMENTATION);
+        springContext.refresh();
         mealController = springContext.getBean(MealRestController.class);
     }
 
@@ -58,7 +61,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
-            case "delete"-> {
+            case "delete" -> {
                 int id = getId(request);
                 mealController.delete(id);
                 response.sendRedirect("meals");
@@ -70,7 +73,7 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
             }
-            case "filter"-> {
+            case "filter" -> {
                 LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
                 LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
                 LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
@@ -78,7 +81,7 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meals", mealController.getBetween(startDate, startTime, endDate, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
             }
-            default ->{
+            default -> {
                 request.setAttribute("meals", mealController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
             }
