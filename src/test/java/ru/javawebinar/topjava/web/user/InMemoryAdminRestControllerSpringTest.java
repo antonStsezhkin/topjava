@@ -16,6 +16,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/inmemory.xml"})
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerSpringTest {
+
     @Autowired
     private AdminRestController controller;
 
@@ -23,7 +24,7 @@ public class InMemoryAdminRestControllerSpringTest {
     private InMemoryUserRepository repository;
 
     @Before
-    public void setUp() {
+    public void setup() {
         repository.init();
     }
 
