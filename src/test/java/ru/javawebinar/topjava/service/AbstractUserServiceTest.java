@@ -10,7 +10,10 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolationException;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -18,7 +21,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
 	@Autowired
-	private UserService service;
+	protected UserService service;
 
 	@Autowired
 	private CacheManager cacheManager;
@@ -77,11 +80,20 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 		User updated = getUpdated();
 		service.update(updated);
 		USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
-}
+	}
 
 	@Test
 	public void getAll() {
 		List<User> all = service.getAll();
 		USER_MATCHER.assertMatch(all, admin, user);
+	}
+
+	@Test
+	public void createWithException() throws Exception {
+		validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
+		validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
+		validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));
+		validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 9, true, new Date(), Set.of())));
+		validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 10001, true, new Date(), Set.of())));
 	}
 }
