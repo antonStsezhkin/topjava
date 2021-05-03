@@ -14,7 +14,7 @@ public class TimingRules {
 	private static final StringBuilder results = new StringBuilder();
 
 	// http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
-	public static final Stopwatch STOPWATCH = new Stopwatch() {
+	public static final org.junit.rules.Stopwatch STOPWATCH = new Stopwatch() {
 		@Override
 		protected void finished(long nanos, Description description) {
 			String result = String.format("%-95s %7d", description.getDisplayName(), TimeUnit.NANOSECONDS.toMillis(nanos));
